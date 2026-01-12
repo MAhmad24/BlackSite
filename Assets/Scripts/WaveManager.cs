@@ -22,6 +22,12 @@ public class WaveManager : MonoBehaviour
 
     private int totalKills = 0;
     
+    [Header("Extraction Settings")]
+    public GameObject extractionPointPrefab;
+    public int waveToSpawnExtraction = 3; // Spawn after wave 3
+
+    private GameObject spawnedExtractionPoint;
+    private bool extractionActive = false;
     void Start()
     {
         // Start first wave
@@ -45,14 +51,18 @@ public class WaveManager : MonoBehaviour
         currentWave++;
         waveInProgress = true;
         
-        // Calculate how many enemies this wave
         enemiesToSpawn = startingEnemies + (currentWave - 1) * enemiesPerWave;
-
-        UpdateWaveUI(); 
+        
+        UpdateWaveUI();
         
         Debug.Log("Wave " + currentWave + " started! Enemies: " + enemiesToSpawn);
         
-        // Spawn all enemies for this wave
+        // Spawn extraction point after certain wave
+        if (currentWave == waveToSpawnExtraction && spawnedExtractionPoint == null)
+        {
+            SpawnExtractionPoint();
+        }
+        
         for (int i = 0; i < enemiesToSpawn; i++)
         {
             SpawnEnemy();
@@ -105,5 +115,33 @@ public class WaveManager : MonoBehaviour
         {
             killCountText.text = "Kills: " + totalKills;
         }
+    }
+
+    public void TriggerExtractionWave()
+    {
+        extractionActive = true;
+        
+        Debug.Log("EXTRACTION WAVE TRIGGERED!");
+        
+        // Spawn final wave (more enemies than normal)
+        int finalWaveEnemies = enemiesToSpawn * 2; // Double current wave
+        
+        for (int i = 0; i < finalWaveEnemies; i++)
+        {
+            SpawnEnemy();
+        }
+        
+        enemiesAlive += finalWaveEnemies;
+    }
+
+    void SpawnExtractionPoint()
+    {
+        // Spawn extraction point near player but not too close
+        Vector2 randomDirection = Random.insideUnitCircle.normalized;
+        Vector3 spawnPosition = player.position + (Vector3)(randomDirection * 8f);
+        
+        spawnedExtractionPoint = Instantiate(extractionPointPrefab, spawnPosition, Quaternion.identity);
+        
+        Debug.Log("Extraction point spawned! Find it and hold E to extract!");
     }
 }
