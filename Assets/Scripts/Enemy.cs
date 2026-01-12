@@ -6,45 +6,40 @@ public class Enemy : MonoBehaviour
     public float moveSpeed = 2f;
     public int health = 3;
     public int damage = 1;
-
-    // Event that fires when enemy dies
+    
     public System.Action OnDeath;
-
+    
     private Transform player;
     private Rigidbody2D rb;
-
-    
+    private bool isDead = false;
     
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
-        
-        // Find the player in the scene
         player = GameObject.FindGameObjectWithTag("Player").transform;
     }
     
     void Update()
     {
-        // Chase the player
-        ChasePlayer();
+        if (!isDead)
+        {
+            ChasePlayer();
+        }
     }
     
     void ChasePlayer()
     {
-        if (player == null) return; // Safety check
+        if (player == null) return;
         
-        // Calculate direction to player
         Vector2 direction = (player.position - transform.position).normalized;
-        
-        // Move toward player
         rb.linearVelocity = direction * moveSpeed;
     }
     
     public void TakeDamage(int damageAmount)
     {
-        health -= damageAmount;
+        if (isDead) return; // CRITICAL: Stop if already dead
         
-        // Visual feedback (optional - we'll add this later)
+        health -= damageAmount;
         Debug.Log("Enemy hit! Health: " + health);
         
         if (health <= 0)
@@ -55,41 +50,52 @@ public class Enemy : MonoBehaviour
     
     void Die()
     {
-        // Notify any listeners (WaveManager) that this enemy died
-        if (OnDeath != null){
-            OnDeath.Invoke();
+        if (isDead) return; // CRITICAL: Prevent double-death
+        isDead = true;
+        
+        Debug.Log("=== ENEMY DIE() CALLED ===");
+        
+        // CRITICAL: Disable colliders IMMEDIATELY so bullets stop hitting
+        Collider2D[] colliders = GetComponents<Collider2D>();
+        foreach (Collider2D col in colliders)
+        {
+            col.enabled = false;
         }
         
-        // Destroy the enemy
-        Destroy(gameObject);
+        // Stop movement
+        rb.linearVelocity = Vector2.zero;
+        
+        // Notify WaveManager
+        if (OnDeath != null)
+        {
+            OnDeath.Invoke();
+            OnDeath = null;
+        }
+        
+        // Destroy after brief delay (gives Die() time to complete)
+        Destroy(gameObject, 0.1f);
     }
     
     void OnTriggerEnter2D(Collider2D other)
     {
-        // Check if hit by bullet
+        if (isDead) return;
+        
         if (other.CompareTag("Bullet"))
         {
             TakeDamage(1);
-            
         }
     }
-
+    
     void OnCollisionStay2D(Collision2D collision)
     {
-        Debug.Log("Enemy colliding with: " + collision.gameObject.name);
-        // Check if touching player
+        if (isDead) return;
+        
         if (collision.gameObject.CompareTag("Player"))
         {
-            Debug.Log("Touching player! Attempting damage...");
-            // Try to damage the player
             PlayerHealth playerHealth = collision.gameObject.GetComponent<PlayerHealth>();
             if (playerHealth != null)
             {
                 playerHealth.TakeDamage(damage);
-            }
-            else
-            {
-                Debug.Log("PlayerHealth component not found!");
             }
         }
     }
