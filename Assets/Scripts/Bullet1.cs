@@ -1,13 +1,14 @@
 using UnityEngine;
-
+using System.Collections.Generic;
 public class Bullet : MonoBehaviour
 {
     [Header("Bullet Settings")]
     public float speed = 20f;
     public float lifetime = 3f;
+    public int damage = 1;
     
     private Rigidbody2D rb;
-    
+    private HashSet<GameObject> hitEnemies = new HashSet<GameObject>();
     void Awake()
     {
         // Awake runs BEFORE Start, so rb will be ready when Initialize is called
@@ -37,9 +38,16 @@ public class Bullet : MonoBehaviour
         // Check if we hit an enemy
         if (other.CompareTag("Enemy"))
         {
-            // Damage the enemy (enemy script handles this)
-            // Bullet will be destroyed by enemy script
-            return;
+            if (hitEnemies.Contains(other.gameObject)){
+                return;
+            }
+
+            hitEnemies.add(other.gameObject);
+
+            Enemy enemy = other.GetComponent<Enemy>();
+            if (enemy != null){
+                enemy.TakeDamage(damage);
+            }
         }
         
         // Destroy bullet if it hits anything else (walls, etc.)
