@@ -998,6 +998,8 @@ MonoBehaviour:
   player: {fileID: 959178008}
   waveText: {fileID: 1784402683}
   killCountText: {fileID: 611557609}
+  extractionPointPrefab: {fileID: 2433735707527219239, guid: 1ae756ea7aaf10c4ab9427d600a898b9, type: 3}
+  waveToSpawnExtraction: 3
 --- !u!4 &855754036
 Transform:
   m_ObjectHideFlags: 0
