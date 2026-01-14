@@ -34,23 +34,26 @@ public class Bullet : MonoBehaviour
     }
 
     void OnTriggerEnter2D(Collider2D other)
+{
+    if (other.CompareTag("Enemy"))
     {
-        // Check if we hit an enemy
-        if (other.CompareTag("Enemy"))
+        // Check if we already hit this enemy
+        if (hitEnemies.Contains(other.gameObject))
         {
-            if (hitEnemies.Contains(other.gameObject)){
-                return;
-            }
-
-            hitEnemies.add(other.gameObject);
-
-            Enemy enemy = other.GetComponent<Enemy>();
-            if (enemy != null){
-                enemy.TakeDamage(damage);
-            }
+            return; // Already damaged this one, skip
         }
         
-        // Destroy bullet if it hits anything else (walls, etc.)
-        // For now, bullets pass through everything except enemies
+        // Mark as hit
+        hitEnemies.Add(other.gameObject);
+        
+        // Damage the enemy
+        Enemy enemy = other.GetComponent<Enemy>();
+        if (enemy != null)
+        {
+            enemy.TakeDamage(damage);
+        }
     }
+    
+    // For now, bullets pass through everything except enemies
+}
 }

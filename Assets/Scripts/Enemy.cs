@@ -80,10 +80,7 @@ public class Enemy : MonoBehaviour
     {
         if (isDead) return;
         
-        if (other.CompareTag("Bullet"))
-        {
-            TakeDamage(1);
-        }
+        
     }
     
     void OnCollisionStay2D(Collision2D collision)
