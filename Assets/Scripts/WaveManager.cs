@@ -37,8 +37,8 @@ public class WaveManager : MonoBehaviour
     
     void Update()
     {
-        // Check if wave is complete
-        if (waveInProgress && enemiesAlive <= 0)
+        // Check if wave is complete (but not during extraction)
+        if (waveInProgress && enemiesAlive <= 0 && !extractionActive)
         {
             // Wave finished! Start next one after delay
             waveInProgress = false;
