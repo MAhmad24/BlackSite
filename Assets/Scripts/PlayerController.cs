@@ -15,6 +15,8 @@ public class PlayerController : MonoBehaviour
     public float fireRate = 0.2f;   // Time between shots
     private float nextFireTime = 0f; // Cooldown tracker
     
+    [Header("Camera Shake")]
+    public CameraShake cameraShake; // Reference to camera shake script
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
@@ -82,5 +84,11 @@ public class PlayerController : MonoBehaviour
         // Initialize bullet with direction
         Bullet bulletScript = bullet.GetComponent<Bullet>();
         bulletScript.Initialize(direction);
+
+        // Trigger camera shake
+        if (cameraShake != null)
+        {
+            cameraShake.TriggerShake(0.1f, 0.1f); // Small shake: 0.1 power, 0.1 seconds
+        }
     }
 }

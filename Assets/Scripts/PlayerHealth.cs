@@ -13,6 +13,9 @@ public class PlayerHealth : MonoBehaviour
     private int currentHealth;
     private bool isInvincible = false;
     private float invincibilityTimer = 0f;
+
+    [Header("Camera Shake")]
+    public CameraShake cameraShake; // Reference to camera shake script
     
     void Start()
     {
@@ -42,6 +45,12 @@ public class PlayerHealth : MonoBehaviour
         currentHealth -= damage;
         UpdateHealthUI(); // <-- Add this line
         Debug.Log("Player took " + damage + " damage! Health: " + currentHealth + "/" + maxHealth);
+
+        // Trigger camera shake
+        if (cameraShake != null)
+        {
+            cameraShake.TriggerShake(0.3f, 0.3f); // Bigger shake: 0.3 power, 0.3 seconds
+        }
         
         // Start invincibility period
         isInvincible = true;
