@@ -88,7 +88,7 @@ public class PlayerController : MonoBehaviour
         // Trigger camera shake
         if (cameraShake != null)
         {
-            cameraShake.TriggerShake(0.05f, 0.1f); // Small shake: 0.1 power, 0.1 seconds
+            cameraShake.TriggerShake(0.125f, 0.075f); // Small shake: 0.1 power, 0.1 seconds
         }
     }
 }
