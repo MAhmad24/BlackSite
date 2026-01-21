@@ -12,6 +12,9 @@ public class Enemy : MonoBehaviour
     private Transform player;
     private Rigidbody2D rb;
     private bool isDead = false;
+
+    [Header("Effects")]
+    public GameObject deathEffectPrefab; // Particle effect on death
     
     void Start()
     {
@@ -54,6 +57,12 @@ public class Enemy : MonoBehaviour
         isDead = true;
         
         Debug.Log("=== ENEMY DIE() CALLED ===");
+
+        // Spawn death particle effect
+        if (deathEffectPrefab != null)
+        {
+            Instantiate(deathEffectPrefab, transform.position, Quaternion.identity);
+        }
         
         // CRITICAL: Disable colliders IMMEDIATELY so bullets stop hitting
         Collider2D[] colliders = GetComponents<Collider2D>();

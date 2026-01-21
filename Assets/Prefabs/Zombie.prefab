@@ -182,6 +182,7 @@ MonoBehaviour:
   moveSpeed: 2
   health: 3
   damage: 1
+  deathEffectPrefab: {fileID: 2265037127500785813, guid: 77cf25cc60cef324fa96922a90ac9796, type: 3}
 --- !u!58 &-801211428584509384
 CircleCollider2D:
   m_ObjectHideFlags: 0
