@@ -49,7 +49,7 @@ public class PlayerHealth : MonoBehaviour
         // Trigger camera shake
         if (cameraShake != null)
         {
-            cameraShake.TriggerShake(0.3f, 0.3f); // Bigger shake: 0.3 power, 0.3 seconds
+            cameraShake.TriggerShake(0.35f, 0.35f); // Bigger shake: 0.3 power, 0.3 seconds
         }
         
         // Start invincibility period
