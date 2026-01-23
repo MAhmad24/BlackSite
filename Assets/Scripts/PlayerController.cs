@@ -15,6 +15,7 @@ public class PlayerController : MonoBehaviour
     public float fireRate = 0.2f;   // Time between shots
     private float nextFireTime = 0f; // Cooldown tracker
     
+    //add better effects than just generic shake
     [Header("Camera Shake")]
     public CameraShake cameraShake; // Reference to camera shake script
     void Start()
