@@ -18,10 +18,15 @@ public class PlayerController : MonoBehaviour
     //add better effects than just generic shake
     [Header("Camera Shake")]
     public CameraShake cameraShake; // Reference to camera shake script
+
+    [Header("Audio")]
+    public AudioClip gunShotSound; // Reference to gunshot sound
+    private AudioSource audioSource; // Reference to AudioSource component
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
         mainCamera = Camera.main;
+        audioSource = GetComponent<AudioSource>(); // Get the AudioSource component
     }
     
     void Update()
@@ -90,6 +95,11 @@ public class PlayerController : MonoBehaviour
         if (cameraShake != null)
         {
             cameraShake.TriggerShake(0.125f, 0.075f); // Small shake: 0.1 power, 0.1 seconds
+        }
+
+        if (audioSource != null && gunShotSound != null)
+        {
+            audioSource.PlayOneShot(gunShotSound);
         }
     }
 }
