@@ -18,13 +18,12 @@ public class Enemy : MonoBehaviour
 
     [Header("Audio")]
     public AudioClip deathSound; // Reference to death sound
-    private AudioSource audioSource; // Reference to AudioSource component
+    
     
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
         player = GameObject.FindGameObjectWithTag("Player").transform;
-        audioSource = GetComponent<AudioSource>(); // Get the AudioSource component
     }
     
     void Update()
@@ -71,7 +70,18 @@ public class Enemy : MonoBehaviour
 
         if (deathSound != null)
         {
-            audioSource.PlayOneShot(deathSound);
+            // Create temporary AudioSource for 2D sound
+            GameObject tempAudio = new GameObject("TempAudio");
+            tempAudio.transform.position = transform.position;
+            AudioSource tempSource = tempAudio.AddComponent<AudioSource>();
+            
+            tempSource.clip = deathSound;
+            tempSource.spatialBlend = 0f; // 2D sound (no distance falloff)
+            tempSource.volume = 1f; // Full volume
+            tempSource.Play();
+            
+            // Destroy the temporary audio object after sound finishes
+            Destroy(tempAudio, deathSound.length);
         }
         
         // CRITICAL: Disable colliders IMMEDIATELY so bullets stop hitting
