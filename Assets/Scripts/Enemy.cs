@@ -15,11 +15,16 @@ public class Enemy : MonoBehaviour
 
     [Header("Effects")]
     public GameObject deathEffectPrefab; // Particle effect on death
+
+    [Header("Audio")]
+    public AudioClip deathSound; // Reference to death sound
+    private AudioSource audioSource; // Reference to AudioSource component
     
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
         player = GameObject.FindGameObjectWithTag("Player").transform;
+        audioSource = GetComponent<AudioSource>(); // Get the AudioSource component
     }
     
     void Update()
@@ -62,6 +67,11 @@ public class Enemy : MonoBehaviour
         if (deathEffectPrefab != null)
         {
             Instantiate(deathEffectPrefab, transform.position, Quaternion.identity);
+        }
+
+        if (deathSound != null)
+        {
+            audioSource.PlayOneShot(deathSound);
         }
         
         // CRITICAL: Disable colliders IMMEDIATELY so bullets stop hitting

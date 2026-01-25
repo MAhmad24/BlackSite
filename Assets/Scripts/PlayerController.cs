@@ -99,7 +99,7 @@ public class PlayerController : MonoBehaviour
 
         if (audioSource != null && gunShotSound != null)
         {
-            audioSource.PlayOneShot(gunShotSound);
+            audioSource.PlayOneShot(gunShotSound, 0.5f);
         }
     }
 }

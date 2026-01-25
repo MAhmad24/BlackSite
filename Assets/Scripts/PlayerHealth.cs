@@ -17,11 +17,15 @@ public class PlayerHealth : MonoBehaviour
     [Header("Camera Shake")]
     public CameraShake cameraShake; // Reference to camera shake script
     
+    [Header("Audio")]
+    public AudioClip damageSound; // Reference to damage/hurt sound
+    private AudioSource audioSource; // Reference to AudioSource component
     void Start()
     {
         currentHealth = maxHealth;
         Debug.Log("Player Health: " + currentHealth + "/" + maxHealth);
         UpdateHealthUI();
+        audioSource = GetComponent<AudioSource>(); // Get AudioSource
     }
     
     void Update()
@@ -50,6 +54,11 @@ public class PlayerHealth : MonoBehaviour
         if (cameraShake != null)
         {
             cameraShake.TriggerShake(0.35f, 0.35f); // Bigger shake: 0.3 power, 0.3 seconds
+        }
+
+        if (audioSource != null && damageSound != null)
+        {
+            audioSource.PlayOneShot(damageSound);
         }
         
         // Start invincibility period
