@@ -224,6 +224,58 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
+--- !u!1 &185095584
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 185095585}
+  - component: {fileID: 185095586}
+  m_Layer: 0
+  m_Name: Pistol
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &185095585
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 185095584}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 959178008}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &185095586
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 185095584}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1f2bf5a071844584bbcd086c9803b0f9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PistolBase
+  weaponName: Weapon
+  fireRate: 0.2
+  bulletSpeed: 20
+  baseDamage: 1
+  bulletPrefab: {fileID: 7486137093476455943, guid: e2bb78d78a41624478b56505d3232555, type: 3}
+  fireSound: {fileID: 8300000, guid: fd3895a2d40b7c0438eb055779a0f92a, type: 3}
+  screenShakePower: 0.1
+  screenShakeDuration: 0.1
 --- !u!1 &419153172
 GameObject:
   m_ObjectHideFlags: 0
@@ -1028,6 +1080,37 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &889587905
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 889587906}
+  m_Layer: 0
+  m_Name: FIrePoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &889587906
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 889587905}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0.3, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 959178008}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &959178004
 GameObject:
   m_ObjectHideFlags: 0
@@ -1043,6 +1126,7 @@ GameObject:
   - component: {fileID: 959178009}
   - component: {fileID: 959178010}
   - component: {fileID: 959178011}
+  - component: {fileID: 959178012}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -1063,11 +1147,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerController
   moveSpeed: 5
-  bulletPrefab: {fileID: 7486137093476455943, guid: e2bb78d78a41624478b56505d3232555, type: 3}
-  firePoint: {fileID: 0}
-  fireRate: 0.2
-  cameraShake: {fileID: 519420033}
-  gunShotSound: {fileID: 8300000, guid: fd3895a2d40b7c0438eb055779a0f92a, type: 3}
 --- !u!50 &959178006
 Rigidbody2D:
   serializedVersion: 5
@@ -1165,7 +1244,9 @@ Transform:
   m_LocalPosition: {x: -0, y: 0.01, z: 0}
   m_LocalScale: {x: 1, y: 2, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 185095585}
+  - {fileID: 889587906}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &959178009
@@ -1330,6 +1411,21 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &959178012
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 959178004}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a0d3021a9b8d4d44395778d6a76c7f6e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::WeaponController
+  currentWeapon: {fileID: 185095586}
+  firePoint: {fileID: 889587906}
+  cameraShake: {fileID: 519420033}
 --- !u!1 &1154783921
 GameObject:
   m_ObjectHideFlags: 0
