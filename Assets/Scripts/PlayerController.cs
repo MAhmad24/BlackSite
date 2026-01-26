@@ -8,46 +8,38 @@ public class PlayerController : MonoBehaviour
     private Vector2 moveInput;
     private Rigidbody2D rb;
     private Camera mainCamera;
-
-    [Header("Shooting Settings")]
-    public GameObject bulletPrefab; // Reference to bullet prefab
-    public Transform firePoint;     // Where bullets spawn from
-    public float fireRate = 0.2f;   // Time between shots
-    private float nextFireTime = 0f; // Cooldown tracker
     
-    //add better effects than just generic shake
-    [Header("Camera Shake")]
-    public CameraShake cameraShake; // Reference to camera shake script
-
-    [Header("Audio")]
-    public AudioClip gunShotSound; // Reference to gunshot sound
-    private AudioSource audioSource; // Reference to AudioSource component
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
         mainCamera = Camera.main;
-        audioSource = GetComponent<AudioSource>(); // Get the AudioSource component
     }
     
     void Update()
     {
-    // Movement input
-    float moveX = Input.GetAxisRaw("Horizontal");
-    float moveY = Input.GetAxisRaw("Vertical");
-    moveInput = new Vector2(moveX, moveY).normalized;
-    
-    // Shooting input
-    HandleShooting();
+        HandleMovementInput();
     }
     
     void FixedUpdate()
     {
-        rb.linearVelocity = moveInput * moveSpeed;
+        ApplyMovement();
     }
     
     void LateUpdate()
     {
         HandleMouseAim();
+    }
+    
+    void HandleMovementInput()
+    {
+        float moveX = Input.GetAxisRaw("Horizontal");
+        float moveY = Input.GetAxisRaw("Vertical");
+        moveInput = new Vector2(moveX, moveY).normalized;
+    }
+    
+    void ApplyMovement()
+    {
+        rb.linearVelocity = moveInput * moveSpeed;
     }
     
     void HandleMouseAim()
@@ -63,43 +55,5 @@ public class PlayerController : MonoBehaviour
         
         // Rotate player to face mouse
         transform.rotation = Quaternion.Euler(0f, 0f, angle - 90f);
-    }
-
-    void HandleShooting()
-{
-    // Check if left mouse button is held down AND cooldown is ready
-    if (Input.GetMouseButton(0) && Time.time >= nextFireTime)
-    {
-        Shoot();
-        nextFireTime = Time.time + fireRate; // Set next allowed fire time
-    }
-}
-
-    void Shoot()
-    {
-        // Get mouse position in world
-        Vector3 mousePos = mainCamera.ScreenToWorldPoint(Input.mousePosition);
-        
-        // Calculate direction to shoot
-        Vector2 direction = (mousePos - transform.position).normalized;
-        
-        // Spawn bullet at player position (or firePoint if we set one)
-        Vector3 spawnPosition = firePoint != null ? firePoint.position : transform.position;
-        GameObject bullet = Instantiate(bulletPrefab, spawnPosition, Quaternion.identity);
-        
-        // Initialize bullet with direction
-        Bullet bulletScript = bullet.GetComponent<Bullet>();
-        bulletScript.Initialize(direction);
-
-        // Trigger camera shake
-        if (cameraShake != null)
-        {
-            cameraShake.TriggerShake(0.125f, 0.075f); // Small shake: 0.1 power, 0.1 seconds
-        }
-
-        if (audioSource != null && gunShotSound != null)
-        {
-            audioSource.PlayOneShot(gunShotSound, 0.5f);
-        }
     }
 }

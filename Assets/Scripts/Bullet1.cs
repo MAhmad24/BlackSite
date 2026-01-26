@@ -1,59 +1,79 @@
 using UnityEngine;
 using System.Collections.Generic;
+
 public class Bullet : MonoBehaviour
 {
-    [Header("Bullet Settings")]
+    [Header("Bullet Properties")]
     public float speed = 20f;
-    public float lifetime = 3f;
+    public float size = 1f;
     public int damage = 1;
+    public float lifetime = 3f;
     
     private Rigidbody2D rb;
     private HashSet<GameObject> hitEnemies = new HashSet<GameObject>();
+    
     void Awake()
     {
-        // Awake runs BEFORE Start, so rb will be ready when Initialize is called
         rb = GetComponent<Rigidbody2D>();
     }
     
     void Start()
     {
-        // Destroy bullet after lifetime expires
+        // Apply visual properties
+        transform.localScale *= size;
+        
+        // Destroy after lifetime
         Destroy(gameObject, lifetime);
     }
     
-    public void Initialize(Vector2 direction)
+    // Initialize bullet with direction, damage, and speed
+    public void Initialize(Vector2 direction, int dmg, float spd)
     {
-        // Safety check
+        damage = dmg;
+        speed = spd;
+        
         if (rb == null)
         {
             rb = GetComponent<Rigidbody2D>();
         }
         
-        // Set bullet velocity
         rb.linearVelocity = direction * speed;
     }
-
-    void OnTriggerEnter2D(Collider2D other)
-{
-    if (other.CompareTag("Enemy"))
+    
+    // Apply upgrade modifiers (for future powerups)
+    public void ApplyModifiers(float sizeMultiplier = 1f, float speedMultiplier = 1f, float damageMultiplier = 1f)
     {
-        // Check if we already hit this enemy
-        if (hitEnemies.Contains(other.gameObject))
-        {
-            return; // Already damaged this one, skip
-        }
+        size *= sizeMultiplier;
+        speed *= speedMultiplier;
+        damage = Mathf.RoundToInt(damage * damageMultiplier);
         
-        // Mark as hit
-        hitEnemies.Add(other.gameObject);
-        
-        // Damage the enemy
-        Enemy enemy = other.GetComponent<Enemy>();
-        if (enemy != null)
+        // Apply new values (multiply, don't replace)
+        transform.localScale *= sizeMultiplier;  // <-- Changed to just apply the multiplier directly
+        if (rb != null)
         {
-            enemy.TakeDamage(damage);
+            rb.linearVelocity = rb.linearVelocity.normalized * speed;
         }
     }
     
-    // For now, bullets pass through everything except enemies
-}
+    void OnTriggerEnter2D(Collider2D other)
+    {
+        if (other.CompareTag("Enemy"))
+        {
+            // Check if we already hit this enemy
+            if (hitEnemies.Contains(other.gameObject))
+            {
+                return;
+            }
+            
+            // Mark as hit
+            hitEnemies.Add(other.gameObject);
+            
+            // Damage the enemy
+            Enemy enemy = other.GetComponent<Enemy>();
+            if (enemy != null)
+            {
+                enemy.TakeDamage(damage);
+            }
+        }
+    }
 }

@@ -8,44 +8,63 @@ public class PistolBase : Weapon
     
     void Awake()
     {
-        // Default pistol stats (can be overridden by subclasses)
+        // Default pistol stats
         weaponName = "Pistol";
         fireRate = 0.2f;
         bulletSpeed = 20f;
         baseDamage = 1;
         
-        // Let subclasses override in their Awake if they want
         SetWeaponStats();
     }
     
-    // Virtual method that subclasses can override to set their own stats
     protected virtual void SetWeaponStats()
     {
-        // Default pistol behavior - subclasses override this
+        // Override in subclasses
     }
     
+    // Default pistol firing (single shot) - CAN BE OVERRIDDEN
     public override void Fire(Vector2 direction, Transform firePoint)
     {
-        // All pistols fire a single bullet
+        FireSingleShot(direction, firePoint);
+        PlayFireSound();
+        TriggerScreenShake();
+        UpdateFireCooldown();
+    }
+    
+    // Helper method for single shot (reusable)
+    protected void FireSingleShot(Vector2 direction, Transform firePoint)
+    {
         SpawnBullet(direction, firePoint);
-        
-        // Play sound if available
+    }
+    
+    // Helper method for burst fire (for burst pistols)
+    protected void FireBurst(Vector2 direction, Transform firePoint, int burstCount, float burstDelay)
+    {
+        StartCoroutine(BurstFireCoroutine(direction, firePoint, burstCount, burstDelay));
+    }
+    
+    System.Collections.IEnumerator BurstFireCoroutine(Vector2 direction, Transform firePoint, int count, float delay)
+    {
+        for (int i = 0; i < count; i++)
+        {
+            SpawnBullet(direction, firePoint);
+            if (i < count - 1) // Don't wait after last bullet
+            {
+                yield return new WaitForSeconds(delay);
+            }
+        }
+    }
+    
+    protected void PlayFireSound()
+    {
         if (fireSound != null)
         {
             AudioSource.PlayClipAtPoint(fireSound, transform.position);
         }
-        
-        // Trigger screen shake (can be overridden per variant)
-        TriggerScreenShake();
-        
-        // Update cooldown
-        UpdateFireCooldown();
     }
     
-    // Virtual so variants can have different shake intensities
     protected virtual void TriggerScreenShake()
     {
-        // Find camera shake (we'll improve this later with a manager)
         CameraShake shake = Camera.main.GetComponent<CameraShake>();
         if (shake != null)
         {
