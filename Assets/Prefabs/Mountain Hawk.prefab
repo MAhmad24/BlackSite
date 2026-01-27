@@ -44,7 +44,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 95a59af640e6f9f41a6b4ab92d9ae3ad, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MountainHawk
-  weaponName: Weapon
+  weaponName: Mountain Hawk
   fireRate: 0.2
   bulletSpeed: 20
   baseDamage: 1

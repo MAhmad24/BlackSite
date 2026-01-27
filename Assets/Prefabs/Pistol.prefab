@@ -44,7 +44,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1f2bf5a071844584bbcd086c9803b0f9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PistolBase
-  weaponName: Weapon
+  weaponName: Pistol
   fireRate: 0.2
   bulletSpeed: 20
   baseDamage: 1

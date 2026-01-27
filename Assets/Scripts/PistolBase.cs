@@ -71,4 +71,14 @@ public class PistolBase : Weapon
             shake.TriggerShake(screenShakePower, screenShakeDuration);
         }
     }
+
+    #if UNITY_EDITOR
+    [UnityEditor.MenuItem("CONTEXT/PistolBase/Refresh Stats")]
+    static void RefreshStats(UnityEditor.MenuCommand command)
+    {
+        PistolBase weapon = (PistolBase)command.context;
+        weapon.SetWeaponStats();
+        UnityEditor.EditorUtility.SetDirty(weapon);
+    }
+    #endif
 }

@@ -44,7 +44,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3b5b372b360c4df439f1103b280a9b65, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::RevolverX11
-  weaponName: Weapon
+  weaponName: Revolver-X11
   fireRate: 0.2
   bulletSpeed: 20
   baseDamage: 1
