@@ -1,6 +1,6 @@
 using UnityEngine;
 using TMPro; // For TextMeshPro
-public class PlayerHealth : MonoBehaviour
+public class PlayerHealth : MonoBehaviour, IDamageable
 {
     [Header("Health Settings")]
     public int maxHealth = 10;
@@ -13,6 +13,8 @@ public class PlayerHealth : MonoBehaviour
     private int currentHealth;
     private bool isInvincible = false;
     private float invincibilityTimer = 0f;
+
+    public bool IsDead => currentHealth <= 0;
 
     [Header("Camera Shake")]
     public CameraShake cameraShake; // Reference to camera shake script
@@ -93,7 +95,12 @@ public class PlayerHealth : MonoBehaviour
     void Die()
     {
         Debug.Log("Player died!");
-        
+
+        if (CurrencyManager.Instance != null)
+        {
+            CurrencyManager.Instance.OnPlayerDeath(0.5f);
+        }
+
         // Update death screen with kill count
         if (deathKillsText != null)
         {
@@ -104,24 +111,27 @@ public class PlayerHealth : MonoBehaviour
                 deathKillsText.text = "You killed " + kills + " zombies";
             }
         }
-        
+
         // Show death screen UI
         if (deathScreenUI != null)
         {
             deathScreenUI.SetActive(true);
         }
-        
-        // Pause the game
-        Time.timeScale = 0f;
+
+        if (GameStateManager.Instance != null)
+        {
+            GameStateManager.Instance.SetState(GameState.Dead);
+        }
+        else
+        {
+            Time.timeScale = 0f;
+        }
     }
     
     // Method to be called by "Play Again" button
     public void RestartGame()
     {
-        // Resume time scale
         Time.timeScale = 1f;
-        
-        // Reload the current scene
         UnityEngine.SceneManagement.SceneManager.LoadScene(
             UnityEngine.SceneManagement.SceneManager.GetActiveScene().name);
     }

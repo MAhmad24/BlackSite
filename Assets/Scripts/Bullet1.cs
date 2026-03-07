@@ -8,72 +8,81 @@ public class Bullet : MonoBehaviour
     public float size = 1f;
     public int damage = 1;
     public float lifetime = 3f;
-    
+
     private Rigidbody2D rb;
     private HashSet<GameObject> hitEnemies = new HashSet<GameObject>();
-    
+    private float spawnTime;
+
     void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
     }
-    
-    void Start()
+
+    void OnEnable()
     {
-        // Apply visual properties
-        transform.localScale *= size;
-        
-        // Destroy after lifetime
-        Destroy(gameObject, lifetime);
+        hitEnemies.Clear();
+        size = 1f;
+        spawnTime = Time.time;
     }
-    
-    // Initialize bullet with direction, damage, and speed
+
+    void Update()
+    {
+        if (Time.time - spawnTime >= lifetime)
+        {
+            ReturnToPool();
+        }
+    }
+
     public void Initialize(Vector2 direction, int dmg, float spd)
     {
         damage = dmg;
         speed = spd;
-        
-        if (rb == null)
-        {
-            rb = GetComponent<Rigidbody2D>();
-        }
-        
+
+        if (rb == null) rb = GetComponent<Rigidbody2D>();
         rb.linearVelocity = direction * speed;
     }
-    
-    // Apply upgrade modifiers (for future powerups)
+
     public void ApplyModifiers(float sizeMultiplier = 1f, float speedMultiplier = 1f, float damageMultiplier = 1f)
     {
         size *= sizeMultiplier;
         speed *= speedMultiplier;
         damage = Mathf.RoundToInt(damage * damageMultiplier);
-        
-        // Apply new values (multiply, don't replace)
-        transform.localScale *= sizeMultiplier;  // <-- Changed to just apply the multiplier directly
+
+        transform.localScale *= sizeMultiplier;
         if (rb != null)
         {
             rb.linearVelocity = rb.linearVelocity.normalized * speed;
         }
     }
-    
+
     void OnTriggerEnter2D(Collider2D other)
     {
-        if (other.CompareTag("Enemy"))
+        IDamageable target = other.GetComponent<IDamageable>();
+
+        if (target != null && !target.IsDead)
         {
-            // Check if we already hit this enemy
-            if (hitEnemies.Contains(other.gameObject))
-            {
-                return;
-            }
-            
-            // Mark as hit
+            if (hitEnemies.Contains(other.gameObject)) return;
             hitEnemies.Add(other.gameObject);
-            
-            // Damage the enemy
-            Enemy enemy = other.GetComponent<Enemy>();
-            if (enemy != null)
+            target.TakeDamage(damage);
+
+            if (CurrencyManager.Instance != null)
             {
-                enemy.TakeDamage(damage);
+                CurrencyManager.Instance.AddCurrency(CurrencyManager.CURRENCY_PER_HIT, "bullet_hit");
             }
+        }
+    }
+
+    private void ReturnToPool()
+    {
+        if (rb != null) rb.linearVelocity = Vector2.zero;
+
+        if (PoolManager.Instance != null)
+        {
+            PoolManager.Instance.BulletPool.Return(gameObject);
+        }
+        else
+        {
+            gameObject.SetActive(false);
         }
     }
 }

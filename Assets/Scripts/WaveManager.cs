@@ -73,14 +73,19 @@ public class WaveManager : MonoBehaviour
     
     void SpawnEnemy()
     {
-        // Random position around the player
         Vector2 randomDirection = Random.insideUnitCircle.normalized;
         Vector3 spawnPosition = player.position + (Vector3)(randomDirection * spawnRadius);
-        
-        // Spawn the enemy
-        GameObject enemy = Instantiate(enemyPrefab, spawnPosition, Quaternion.identity);
-        
-        // Subscribe to enemy death
+
+        GameObject enemy;
+        if (PoolManager.Instance != null)
+        {
+            enemy = PoolManager.Instance.EnemyPool.Get(spawnPosition, Quaternion.identity);
+        }
+        else
+        {
+            enemy = Instantiate(enemyPrefab, spawnPosition, Quaternion.identity);
+        }
+
         Enemy enemyScript = enemy.GetComponent<Enemy>();
         if (enemyScript != null)
         {

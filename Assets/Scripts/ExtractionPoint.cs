@@ -39,17 +39,20 @@ public class ExtractionPoint : MonoBehaviour
     {
         isActivated = true;
         isExtracting = true;
-        
+
         Debug.Log("EXTRACTION ACTIVATED! Survive for " + extractionDuration + " seconds!");
-        
-        // Notify WaveManager to trigger final wave
+
+        if (GameStateManager.Instance != null)
+        {
+            GameStateManager.Instance.SetState(GameState.Extracting);
+        }
+
         WaveManager waveManager = FindObjectOfType<WaveManager>();
         if (waveManager != null)
         {
             waveManager.TriggerExtractionWave();
         }
-        
-        // Start extraction timer
+
         StartCoroutine(ExtractionTimer());
     }
     
@@ -64,9 +67,17 @@ public class ExtractionPoint : MonoBehaviour
     void ExtractionSuccess()
     {
         Debug.Log("EXTRACTION SUCCESSFUL!");
-        
-        // TODO: Save currency, show success screen
-        // For now, just reload scene
+
+        if (CurrencyManager.Instance != null)
+        {
+            CurrencyManager.Instance.OnExtractionSuccess();
+        }
+
+        if (GameStateManager.Instance != null)
+        {
+            GameStateManager.Instance.SetState(GameState.Victory);
+        }
+
         UnityEngine.SceneManagement.SceneManager.LoadScene(
             UnityEngine.SceneManagement.SceneManager.GetActiveScene().name
         );

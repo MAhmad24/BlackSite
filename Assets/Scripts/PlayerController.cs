@@ -17,6 +17,12 @@ public class PlayerController : MonoBehaviour
     
     void Update()
     {
+        if (GameStateManager.Instance != null && !GameStateManager.Instance.IsPlaying)
+        {
+            moveInput = Vector2.zero;
+            return;
+        }
+
         HandleMovementInput();
     }
     
