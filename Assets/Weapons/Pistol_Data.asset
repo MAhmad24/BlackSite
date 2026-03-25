@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 489f715e9c29fbe42a9c5316f9d13663, type: 3}
   m_Name: Pistol_Data
   m_EditorClassIdentifier: Assembly-CSharp::WeaponData
-  weaponName: New Weapon
+  weaponName: Pistol
   weaponIcon: {fileID: 0}
   description: 
   fireRate: 0.2
@@ -26,6 +26,6 @@ MonoBehaviour:
   spreadAngle: 20
   screenShakePower: 0.1
   screenShakeDuration: 0.1
-  fireSound: {fileID: 0}
+  fireSound: {fileID: 8300000, guid: fd3895a2d40b7c0438eb055779a0f92a, type: 3}
   purchaseCost: 0
   mysteryBoxWeight: 1
