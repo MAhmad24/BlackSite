@@ -132,8 +132,7 @@ public class PlayerHealth : MonoBehaviour, IDamageable
     public void RestartGame()
     {
         Time.timeScale = 1f;
-        UnityEngine.SceneManagement.SceneManager.LoadScene(
-            UnityEngine.SceneManagement.SceneManager.GetActiveScene().name);
+        UnityEngine.SceneManagement.SceneManager.LoadScene("MainMenu");
     }
     
     // Method to be called by "Main Menu" button (if you have one)

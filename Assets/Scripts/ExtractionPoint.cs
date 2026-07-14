@@ -78,9 +78,8 @@ public class ExtractionPoint : MonoBehaviour
             GameStateManager.Instance.SetState(GameState.Victory);
         }
 
-        UnityEngine.SceneManagement.SceneManager.LoadScene(
-            UnityEngine.SceneManagement.SceneManager.GetActiveScene().name
-        );
+        Time.timeScale = 1f;
+        UnityEngine.SceneManagement.SceneManager.LoadScene("MainMenu");
     }
     
     void OnTriggerEnter2D(Collider2D other)
